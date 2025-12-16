@@ -1,30 +1,46 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.scss';
 import { GoodsList } from './GoodsList';
 
 import * as goodsAPI from './api/goods';
 import { Good } from './types/Good';
 
-export const App: React.FC = () => {
+export const App = React.memo(function App() {
   const [goods, setGoods] = useState<Good[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleGetAllGoodsClick = () => {
-    goodsAPI.getAll().then(data => {
-      setGoods(data);
-    });
-  };
+  const handleGetAllGoodsClick = useCallback(() => {
+    goodsAPI
+      .getAll()
+      .then(data => {
+        setGoods(data);
+      })
+      .catch(e => {
+        setError(String(e));
+      });
+  }, []);
 
-  const handleGet5GoodsClick = () => {
-    goodsAPI.get5First().then(data => {
-      setGoods(data);
-    });
-  };
+  const handleGet5GoodsClick = useCallback(() => {
+    goodsAPI
+      .get5First()
+      .then(data => {
+        setGoods(data);
+      })
+      .catch(e => {
+        setError(String(e));
+      });
+  }, []);
 
-  const handleGetRedGoodsClick = () => {
-    goodsAPI.getRedGoods().then(data => {
-      setGoods(data);
-    });
-  };
+  const handleGetRedGoodsClick = useCallback(() => {
+    goodsAPI
+      .getRedGoods()
+      .then(data => {
+        setGoods(data);
+      })
+      .catch(e => {
+        setError(String(e));
+      });
+  }, []);
 
   return (
     <div className="App">
@@ -53,8 +69,8 @@ export const App: React.FC = () => {
       >
         Load red goods
       </button>
-
-      <GoodsList goods={goods} />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {goods.length > 0 && !error && <GoodsList goods={goods} />}
     </div>
   );
-};
+});
