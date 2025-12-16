@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import './App.scss';
-import { GoodsList } from './GoodsList';
+import GoodsList from './GoodsList';
 
 import * as goodsAPI from './api/goods';
 import { Good } from './types/Good';
 
-export const App = React.memo(function App() {
+export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,4 +73,4 @@ export const App = React.memo(function App() {
       {goods.length > 0 && !error && <GoodsList goods={goods} />}
     </div>
   );
-});
+};
